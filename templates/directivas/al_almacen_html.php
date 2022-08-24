@@ -13,6 +13,8 @@ class al_almacen_html extends html_controler {
         $controler->inputs->exterior = $inputs->texts->exterior;
         $controler->inputs->interior = $inputs->texts->interior;
         $controler->inputs->telefono_1 = $inputs->texts->telefono_1;
+        $controler->inputs->telefono_2 = $inputs->texts->telefono_2;
+        $controler->inputs->telefono_3 = $inputs->texts->telefono_3;
 
 
         return $controler->inputs;
@@ -68,6 +70,18 @@ class al_almacen_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar input',data:  $in_text);
         }
         $texts->telefono_1 = $in_text;
+
+        $in_text = $this->input_create(cols: 4,row_upd:  $row_upd,value_vacio:  $value_vacio, name: 'telefono_2', place_holder: 'Telefono_2');
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_text);
+        }
+        $texts->telefono_2 = $in_text;
+
+        $in_text = $this->input_create(cols: 4,row_upd:  $row_upd,value_vacio:  $value_vacio, name: 'telefono_3', place_holder: 'Telefono_3');
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_text);
+        }
+        $texts->telefono_3 = $in_text;
 
         return $texts;
     }

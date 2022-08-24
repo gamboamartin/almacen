@@ -9,3 +9,5 @@
 <?php echo $controlador->inputs->exterior; ?>
 <?php echo $controlador->inputs->interior; ?>
 <?php echo $controlador->inputs->telefono_1; ?>
+<?php echo $controlador->inputs->telefono_2; ?>
+<?php echo $controlador->inputs->telefono_3; ?>
