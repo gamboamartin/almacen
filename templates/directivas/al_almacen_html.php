@@ -129,7 +129,7 @@ class al_almacen_html extends html_controler {
         $selects->org_sucursal_id = $select;
 
         $select = (new dp_calle_pertenece_html(html:$this->html_base))->select_dp_calle_pertenece_id(
-            cols: 12, con_registros:true, id_selected:-1,link: $link);
+            cols: 6, con_registros:true, id_selected:-1,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select',data:  $select);
         }
