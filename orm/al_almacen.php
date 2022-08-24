@@ -2,6 +2,7 @@
 namespace models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
+use html\al_almacen_html;
 use PDO;
 use stdClass;
 
