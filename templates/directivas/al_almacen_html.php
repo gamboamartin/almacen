@@ -39,6 +39,21 @@ class al_almacen_html extends html_controler {
         return $inputs_asignados;
     }
 
+    public function genera_inputs_modifica(controlador_al_almacen $controler, PDO $link, stdClass $params = new stdClass()): array|stdClass
+    {
+        $inputs = $this->init_modifica(link: $link, row_upd: $controler->row_upd, params: $params);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
+        }
+
+        $inputs_asignados = $this->asigna_inputs(controler:$controler, inputs: $inputs);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al asignar inputs',data:  $inputs_asignados);
+        }
+
+        return $inputs_asignados;
+    }
+
 
     private function init_alta(PDO $link): array|stdClass
     {
@@ -58,8 +73,72 @@ class al_almacen_html extends html_controler {
         return $alta_inputs;
     }
 
-    private function texts_alta(stdClass $row_upd, bool $value_vacio): array|stdClass
+    private function init_modifica(PDO $link, stdClass $row_upd, stdClass $params = new stdClass()): array|stdClass
     {
+        $selects = $this->selects_modifica(link: $link, row_upd: $row_upd);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar selects',data:  $selects);
+        }
+
+        $texts = $this->texts_alta(row_upd: $row_upd, value_vacio: false, params: $params);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar texts',data:  $texts);
+        }
+
+        $alta_inputs = new stdClass();
+        $alta_inputs->selects = $selects;
+        $alta_inputs->texts = $texts;
+
+        return $alta_inputs;
+    }
+
+    private function selects_alta(PDO $link): array|stdClass
+    {
+        $selects = new stdClass();
+
+        $select = (new org_sucursal_html(html:$this->html_base))->select_org_sucursal_id(
+            cols: 12, con_registros:true, id_selected:-1,link: $link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
+        }
+        $selects->org_sucursal_id = $select;
+
+        $select = (new dp_calle_pertenece_html(html:$this->html_base))->select_dp_calle_pertenece_id(
+            cols: 12, con_registros:true, id_selected:-1,link: $link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
+        }
+        $selects->dp_calle_pertenece_id = $select;
+
+        return $selects;
+    }
+
+    private function selects_modifica(PDO $link, stdClass $row_upd): array|stdClass
+    {
+        $selects = new stdClass();
+
+        $select = (new org_sucursal_html(html:$this->html_base))->select_org_sucursal_id(
+            cols: 6, con_registros:true, id_selected:$row_upd->org_sucursal_id,link: $link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
+        }
+        $selects->org_sucursal_id = $select;
+
+        $select = (new dp_calle_pertenece_html(html:$this->html_base))->select_dp_calle_pertenece_id(
+            cols: 12, con_registros:true, id_selected:$row_upd->dp_calle_pertenece_id,link: $link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
+        }
+        $selects->dp_calle_pertenece_id = $select;
+
+        return $selects;
+    }
+
+    private function texts_alta(stdClass $row_upd, bool $value_vacio, stdClass $params = new stdClass()): array|stdClass
+    {
+        $cols_codigo = $params->codigo->cols ?? 6;
+        $disabled_codigo = $params->codigo->disabled ?? false;
+
         $texts = new stdClass();
 
         $in_text = $this->input_create(cols: 4,row_upd:  $row_upd,value_vacio:  $value_vacio, name: 'exterior', place_holder: 'Exterior');
@@ -117,25 +196,6 @@ class al_almacen_html extends html_controler {
         return $div;
     }
 
-    private function selects_alta(PDO $link): array|stdClass
-    {
-        $selects = new stdClass();
 
-        $select = (new org_sucursal_html(html:$this->html_base))->select_org_sucursal_id(
-            cols: 12, con_registros:true, id_selected:-1,link: $link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
-        }
-        $selects->org_sucursal_id = $select;
-
-        $select = (new dp_calle_pertenece_html(html:$this->html_base))->select_dp_calle_pertenece_id(
-            cols: 12, con_registros:true, id_selected:-1,link: $link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
-        }
-        $selects->dp_calle_pertenece_id = $select;
-
-        return $selects;
-    }
 
 }
